@@ -23,11 +23,15 @@ jobs:
         run: sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
 
       # From https://www.anchor-lang.com/docs/installation#anchor
-      - name: Install Anchor
+      - name: Prepare OS
         run: |
           sudo apt-get update
           sudo apt-get upgrade
           sudo apt-get install -y pkg-config build-essential libudev-dev libssl-dev
+
+      # From https://www.anchor-lang.com/docs/installation#anchor
+      - name: Install Anchor
+        run: |
           cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
           avm install latest
           avm use latest
