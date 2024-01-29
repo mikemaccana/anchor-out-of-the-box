@@ -1,0 +1,45 @@
+# From https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs#using-the-nodejs-starter-workflow
+name: Node.js and Solana CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # From https://docs.solana.com/cli/install-solana-cli-tools
+      - name: Install Solana
+        run: sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
+
+      # From https://www.anchor-lang.com/docs/installation#anchor
+      - name: Install Anchor
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade
+          sudo apt-get install -y pkg-config build-essential libudev-dev libssl-dev
+          cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
+          avm install latest
+          avm use latest
+
+      - name: Add Solana to PATH
+        run: echo "/home/runner/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+
+      - name: Show Solana version
+        run: solana --version
+
+      - name: Show Anchor version
+        run: anchor --version
+
+      - name: Start a new Anchor project
+        run: anchor init anchor-test --template=multiple
