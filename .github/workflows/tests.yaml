@@ -16,7 +16,7 @@ jobs:
         node-version: [20.x]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@main
 
       # From https://docs.solana.com/cli/install-solana-cli-tools
       - name: Install Solana
